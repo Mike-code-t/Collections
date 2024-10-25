@@ -1,0 +1,132 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace DictionaryProject
+{
+    class Program
+    {
+        // Initialize a dictionary at the class level
+        static Dictionary<string, List<string>> myDictionary = new Dictionary<string, List<string>>();
+
+        static void Main(string[] args)
+        {
+            bool continueProgram = true;
+
+            while (continueProgram)
+            {
+                Console.WriteLine("\nSelect an option:");
+                Console.WriteLine("a. Populate the Dictionary");
+                Console.WriteLine("b. Display Dictionary Contents");
+                Console.WriteLine("c. Remove a Key");
+                Console.WriteLine("d. Add a New Key and Value");
+                Console.WriteLine("e. Add a Value to an Existing Key");
+                Console.WriteLine("f. Sort the Keys");
+                Console.WriteLine("q. Quit");
+
+                char choice = Console.ReadLine().ToLower()[0];
+
+                switch (choice)
+                {
+                    case 'a':
+                        PopulateDictionary();
+                        break;
+                    case 'b':
+                        DisplayDictionary();
+                        break;
+                    case 'c':
+                        RemoveKey();
+                        break;
+                    case 'd':
+                        AddNewKeyValue();
+                        break;
+                    case 'e':
+                        AddValueToExistingKey();
+                        break;
+                    case 'f':
+                        SortKeys();
+                        break;
+                    case 'q':
+                        continueProgram = false;
+                        Console.WriteLine("Exiting program...");
+                        break;
+                    default:
+                        Console.WriteLine("Invalid option. Please try again.");
+                        break;
+                }
+            }
+        }
+
+        // Task a: Populate the Dictionary
+        static void PopulateDictionary()
+        {
+            myDictionary.Add("Fruit", new List<string> { "Apple", "Banana" });
+            myDictionary.Add("Vegetable", new List<string> { "Carrot", "Broccoli" });
+            Console.WriteLine("Dictionary populated with initial data.");
+        }
+
+        // Task b: Display Dictionary Contents
+        static void DisplayDictionary()
+        {
+            Console.WriteLine("\nDictionary Contents:");
+            foreach (var entry in myDictionary)
+            {
+                Console.WriteLine($"{entry.Key}: {string.Join(", ", entry.Value)}");
+            }
+        }
+
+        // Task c: Remove a Key
+        static void RemoveKey()
+        {
+            Console.WriteLine("Enter the key to remove:");
+            string key = Console.ReadLine();
+
+            if (myDictionary.Remove(key))
+                Console.WriteLine($"Key '{key}' removed.");
+            else
+                Console.WriteLine($"Key '{key}' not found.");
+        }
+
+        // Task d: Add a New Key and Value
+        static void AddNewKeyValue()
+        {
+            Console.WriteLine("Enter the new key:");
+            string key = Console.ReadLine();
+            Console.WriteLine("Enter the value for this key:");
+            string value = Console.ReadLine();
+
+            if (!myDictionary.ContainsKey(key))
+                myDictionary[key] = new List<string> { value };
+            else
+                Console.WriteLine("Key already exists. Use option 'e' to add values to an existing key.");
+        }
+
+        // Task e: Add a Value to an Existing Key
+        static void AddValueToExistingKey()
+        {
+            Console.WriteLine("Enter the key to add a value to:");
+            string key = Console.ReadLine();
+            Console.WriteLine("Enter the new value:");
+            string newValue = Console.ReadLine();
+
+            if (myDictionary.ContainsKey(key))
+            {
+                myDictionary[key].Add(newValue);
+                Console.WriteLine($"Value '{newValue}' added to key '{key}'.");
+            }
+            else
+                Console.WriteLine($"Key '{key}' not found.");
+        }
+
+        // Task f: Sort the Keys
+        static void SortKeys()
+        {
+            var sortedKeys = myDictionary.Keys.OrderBy(k => k).ToList();
+            Console.WriteLine("\nSorted Keys:");
+            foreach (var key in sortedKeys)
+            {
+                Console.WriteLine(key);
+            }
+        }
+    }
+}
