@@ -1,0 +1,112 @@
+using System;
+using System.Collections.Generic;
+
+class Contractor
+{
+    // Properties for Contractor class
+    public string ContractorName { get; set; }
+    public int ContractorNumber { get; set; }
+    public DateTime ContractorStartDate { get; set; }
+
+    // Constructor for Contractor class
+    public Contractor(string name, int number, DateTime startDate)
+    {
+        ContractorName = name;
+        ContractorNumber = number;
+        ContractorStartDate = startDate;
+    }
+
+    // Default constructor
+    public Contractor() : this("Unknown", 0, DateTime.Now) { }
+}
+
+class Subcontractor : Contractor
+{
+    // Properties specific to Subcontractor
+    public int Shift { get; set; } // 1 for day, 2 for night
+    public double HourlyPayRate { get; set; }
+
+    // Constructor for Subcontractor class
+    public Subcontractor(string name, int number, DateTime startDate, int shift, double hourlyPayRate)
+        : base(name, number, startDate)
+    {
+        Shift = shift;
+        HourlyPayRate = hourlyPayRate;
+    }
+
+    // Default constructor
+    public Subcontractor() : base()
+    {
+        Shift = 1; // Default to day shift
+        HourlyPayRate = 0.0;
+    }
+
+    // Method to calculate pay with shift differential
+    public float ComputePay(float hoursWorked)
+    {
+        double totalPay = hoursWorked * HourlyPayRate;
+
+        if (Shift == 2) // Night shift differential of 3%
+        {
+            totalPay *= 1.03;
+        }
+
+        return (float)totalPay;
+    }
+
+    // Override ToString() for easy display
+    public override string ToString()
+    {
+        return $"Subcontractor: {ContractorName}, Number: {ContractorNumber}, Start Date: {ContractorStartDate.ToShortDateString()}, " +
+               $"Shift: {(Shift == 1 ? "Day" : "Night")}, Hourly Pay: ${HourlyPayRate:F2}";
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        List<Subcontractor> subcontractors = new List<Subcontractor>();
+        string input;
+
+        Console.WriteLine("Subcontractor Management System\n");
+
+        do
+        {
+            Console.WriteLine("Enter details for a new subcontractor:");
+
+            Console.Write("Name: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Contractor Number: ");
+            int number = int.Parse(Console.ReadLine());
+
+            Console.Write("Start Date (YYYY-MM-DD): ");
+            DateTime startDate = DateTime.Parse(Console.ReadLine());
+
+            Console.Write("Shift (1 for Day, 2 for Night): ");
+            int shift = int.Parse(Console.ReadLine());
+
+            Console.Write("Hourly Pay Rate: ");
+            double hourlyPayRate = double.Parse(Console.ReadLine());
+
+            Subcontractor subcontractor = new Subcontractor(name, number, startDate, shift, hourlyPayRate);
+            subcontractors.Add(subcontractor);
+
+            Console.Write("Would you like to add another subcontractor? (yes/no): ");
+            input = Console.ReadLine()?.ToLower();
+
+        } while (input == "yes");
+
+        Console.WriteLine("\nSubcontractor Details:");
+        foreach (var sub in subcontractors)
+        {
+            Console.WriteLine(sub);
+            Console.Write("Enter hours worked to compute pay: ");
+            float hoursWorked = float.Parse(Console.ReadLine());
+            Console.WriteLine($"Total Pay: ${sub.ComputePay(hoursWorked):F2}\n");
+        }
+
+        Console.WriteLine("Thank you for using the Subcontractor Management System!");
+    }
+}
